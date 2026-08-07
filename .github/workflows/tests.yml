@@ -1,0 +1,53 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+
+    services:
+      postgresql:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: meetpointdb_test
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+          
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      
+
+      - name: Run tests
+        env:
+          DATABASE_URL: postgresql+psycopg2://postgres:testpassword@127.0.0.1:5432/meetpointdb_test
+          SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+        run: pytest
+
+      
