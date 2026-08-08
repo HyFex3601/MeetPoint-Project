@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from app.database import Base
+from datetime import datetime
 
 class User(Base):
     __tablename__ = "Users"
@@ -28,3 +29,15 @@ class Event(Base):
     capacity = Column(Integer)
 
     organizer_id = Column(Integer, ForeignKey("Users.id"))
+
+
+class Booking(Base):
+    __tablename__ = "Booking"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(Integer, ForeignKey("Users.id"))
+
+    event_id = Column(Integer, ForeignKey("Events.id"))
+
+    booked_at = Column(DateTime, default=datetime.utcnow) 
