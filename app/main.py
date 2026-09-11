@@ -8,9 +8,21 @@ import json
 from fastapi import Request
 from app.auth import hash_password, verify_password, create_access_token, get_current_user, require_role
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
+
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500", "http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
 
 class UserCreate(BaseModel):
     username: str
@@ -66,7 +78,7 @@ def login(info: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
 
 
 @app.post("/create-events")
-def create_event(event: EventCreate, db: Session = Depends(get_db), required_role: dict = Depends(require_role(["organizer", "admin"]))):
+def create_event(event: EventCreate, db: Session = Depends(get_db), required_role: dict = Depends(require_role(["organizer", "admin", "attendee"]))):
 
     check_user = db.query(models.User).filter(models.User.username == required_role["username"]).first()
 
@@ -169,3 +181,22 @@ def booking(event_id: int, db: Session = Depends(get_db), user_role: dict = Depe
 
 
 
+@app.get("/my-bookings")
+def my_booking(db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+
+    check_user = db.query(models.User).filter(models.User.username == user["username"]).first()
+
+    check_booking = db.query(models.Booking).filter(models.Booking.user_id == check_user.id).all()
+
+    results = []
+
+    for booking in check_booking:
+        each_event = db.query(models.Event).filter(models.Event.id == booking.event_id).first()
+        event_info = {"id": each_event.id, "title": each_event.title, "description": each_event.description, "date": each_event.date, "location": each_event.location, "capacity": each_event.capacity}
+        results.append(event_info)
+
+
+    if check_booking:
+        return results
+    else:
+        raise HTTPException(status_code=404, detail="You don't have any Events booked")

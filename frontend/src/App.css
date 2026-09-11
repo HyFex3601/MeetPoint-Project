@@ -1,0 +1,18 @@
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+  margin: auto;
+}
+
+input {
+  margin-bottom: 10px;
+  padding: 8px;
+  text-align: center;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 0.2cm;
+  color: lab(61.12% -17.3 -33.53);
+}
