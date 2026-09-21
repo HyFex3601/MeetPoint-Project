@@ -16,3 +16,44 @@ nav a {
   padding: 0.2cm;
   color: lab(61.12% -17.3 -33.53);
 }
+
+#UnBookBTN {
+  max-width: 150px;
+  margin: auto;
+  background-color: red;
+  border-color: red;
+}
+
+#BTNContainer {
+  display: flex;     
+  gap: 15px;  
+  justify-content: center;
+  
+
+}
+
+#deleteBTN {
+  gap: 1pxx;
+  background-color: red;
+  color: white;
+  border: 1px solid red;
+  outline: 2px solid red !important;
+  box-shadow: 0 0 0 1px red !important;
+
+}
+#bookBTN {
+  background-color: green;
+  color: white;
+  border: 1px solid green;
+  outline: 2px solid green !important;
+  box-shadow: 0 0 0 2px green !important;
+}
+
+#logoutBTN {
+  margin-left: 80px;
+  background-color: red;
+  color: white;
+  border: 1px solid red;
+  outline: 2px solid red !important;
+  box-shadow: 0 0 0 1px red !important;
+}

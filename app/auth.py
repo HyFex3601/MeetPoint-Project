@@ -52,3 +52,12 @@ def require_role(allowed_roles: list):
             raise HTTPException(status_code=403, detail="Not authorized")
         return current_user
     return role_checker
+
+
+def get_current_user_from_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username = payload.get("sub")
+        return username
+    except JWTError:
+        return None

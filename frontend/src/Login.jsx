@@ -29,6 +29,7 @@ function Login() {
             if (result.status === 200) {
                 localStorage.setItem("access_token", result.data.access_token);
                 alert("Login Successful");
+                window.location.href="/events";
             } else {
                 alert(result.data.detail)
             }

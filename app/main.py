@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 from app.database import Base, engine, SessionLocal
 from app import models
@@ -6,9 +6,12 @@ from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 import json
 from fastapi import Request
-from app.auth import hash_password, verify_password, create_access_token, get_current_user, require_role
+from app.auth import hash_password, verify_password, create_access_token, get_current_user, require_role, get_current_user_from_token
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
+from jose import jwt, JWTError
+
+
 
 
 Base.metadata.create_all(bind=engine)
@@ -43,6 +46,10 @@ def get_db():
     finally:
         db.close()
 
+def send_confirmation_email(username: str, event_title: str):
+    import time
+    time.sleep(3)
+    print(f"Email sent to {username}: You are booked for {event_title}")
 
 @app.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -140,20 +147,21 @@ def delete_event(event_id: int, db: Session = Depends(get_db), user_role: dict =
 
     if check_event is None:
         raise HTTPException(status_code=404, detail="Event not Found")
-    else:
-        check_user = db.query(models.User).filter(models.User.username == user_role["username"]).first()
+    
+    check_user = db.query(models.User).filter(models.User.username == user_role["username"]).first()
 
-        if check_event.organizer_id == check_user.id:
-            db.delete(check_event)
-            db.commit()
-            return {"message": "Event Deleted Successfully"}
-        else:
-            raise HTTPException(status_code=403, detail="Not Authorized")
+    if check_event.organizer_id == check_user.id:
+        db.query(models.Booking).filter(models.Booking.event_id == event_id).delete()
+        db.delete(check_event)
+        db.commit()
+        return {"message": "Event Deleted Successfully"}
+    else:
+        raise HTTPException(status_code=403, detail="Not Authorized")
 
 
 
 @app.post("/Events/{event_id}/book")
-def booking(event_id: int, db: Session = Depends(get_db), user_role: dict = Depends(require_role(["organizer", "admin", "attendee"]))):
+def booking(event_id: int,background_tasks: BackgroundTasks, db: Session = Depends(get_db), user_role: dict = Depends(require_role(["organizer", "admin", "attendee"]))):
     check_event = db.query(models.Event).filter(models.Event.id == event_id).with_for_update().first()
 
     if check_event is None:
@@ -177,6 +185,7 @@ def booking(event_id: int, db: Session = Depends(get_db), user_role: dict = Depe
     db.add(new_booking)
     db.commit()
     db.refresh(new_booking)
+    background_tasks.add_task(send_confirmation_email, user_role["username"], check_event.title)
     return {"message": "You are booked for this Event"}
 
 
@@ -194,9 +203,65 @@ def my_booking(db: Session = Depends(get_db), user: dict = Depends(get_current_u
         each_event = db.query(models.Event).filter(models.Event.id == booking.event_id).first()
         event_info = {"id": each_event.id, "title": each_event.title, "description": each_event.description, "date": each_event.date, "location": each_event.location, "capacity": each_event.capacity}
         results.append(event_info)
+        
+    return results
+
+active_connections: dict[str, list[WebSocket]] = {}
+
+@app.websocket("/ws/{room_id}")
+async def chat_endpoint(websocket: WebSocket, room_id: str, token: str, db: Session=Depends(get_db)):
+
+    username = get_current_user_from_token(token)
+
+    if username is None:
+        await websocket.close(code=1008)
+        return
+    
+    await websocket.accept()
+
+    history = db.query(models.Message).filter(models.Message.room_id == room_id).all()
+
+    for msg in history:
+        await websocket.send_text(msg.username + ": " + msg.content)
+
+    if room_id not in active_connections:
+        active_connections[room_id] = []
+
+    active_connections[room_id].append(websocket)
+
+    try:
+        while True:
+            data = await websocket.receive_text()
+
+            username_part = data.split(":")[0].strip()
+            content_part = ":".join(data.split(":")[1:]).strip()
+            new_message = models.Message(room_id=room_id, username=username_part, content=content_part)
+
+            db.add(new_message)
+            db.commit()
+            
+            for connection in active_connections[room_id]:
+                await connection.send_text(data)
+        
+    except WebSocketDisconnect:
+        active_connections[room_id].remove(websocket)
 
 
-    if check_booking:
-        return results
-    else:
-        raise HTTPException(status_code=404, detail="You don't have any Events booked")
+
+@app.delete("/my-booking/{event_id}")
+def unbooking(event_id: int, user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+
+    check_user = db.query(models.User).filter(models.User.username == user["username"]).first()
+
+    check_event = db.query(models.Booking).filter(models.Booking.event_id == event_id, models.Booking.user_id == check_user.id).first()
+
+    if check_event is None:
+        raise HTTPException(status_code= 404, detail="Event not Found")
+
+    db.delete(check_event)
+    db.commit()
+    return {"message": "Event deleted Successfully"}
+
+    
+        
+

@@ -41,3 +41,19 @@ class Booking(Base):
     event_id = Column(Integer, ForeignKey("Events.id"))
 
     booked_at = Column(DateTime, default=datetime.utcnow) 
+
+
+class Message(Base):
+    __tablename__ = "Messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    event_id = Column(Integer, ForeignKey("Events.id"), nullable=True)
+
+    username = Column(String(15))
+
+    content = Column(String(500))
+
+    room_id = Column(String(20), default="global")
+
+    sent_at = Column(DateTime, default=datetime.utcnow)
