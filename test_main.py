@@ -8,6 +8,9 @@ from app.database import SessionLocal
 from app import models
 from sqlalchemy import Column, Integer, String
 from app.auth import hash_password
+import pytest 
+from starlette.websockets import WebSocketDisconnect
+
 client = TestClient(app)
 
 
@@ -179,6 +182,7 @@ def test_double_booking():
 
 
 def test_capacity_full():
+
     unique_name = str(uuid.uuid4())[:8]
 
     db = SessionLocal()
@@ -238,3 +242,61 @@ def test_capacity_full():
 
     assert book_event_user.status_code == 200
     assert book_event_user2.status_code == 409
+
+
+def make_user_token():
+    name = str(uuid.uuid4())[:8]
+    client.post("/register", json={"username": name, "password": "testpass123"})
+    login = client.post("/login", data={"username": name, "password": "testpass123"})
+    return name, login.json()["access_token"]
+
+def test_websocket_chat():
+    name = str(uuid.uuid4())[:8]
+    room = str(uuid.uuid4())[:8]
+
+    client.post("/register", json={"username": name, "password": "testpass123"})
+    check_login = client.post("/login", data={"username": name, "password": "testpass123"})
+    token = check_login.json()["access_token"]
+
+    with client.websocket_connect(f"/ws/{room}?token={token}") as websocket:
+        websocket.send_text(f"{name}: hello from test")
+        response = websocket.receive_text()
+
+        assert response == f"{name}: hello from test"
+
+
+def test_websocket_bad_token():
+    room = str(uuid.uuid4())[:8]
+
+    with pytest.raises(WebSocketDisconnect):
+        with client.websocket_connect(f"/ws/{room}?token-not-a-real-token"):
+            pass
+
+
+
+def test_websocket_two_users_same_room():
+    room = str(uuid.uuid4())[:8]
+    name1, token1 = make_user_token()
+    name2, token2 = make_user_token()
+
+    with client.websocket_connect(f"/ws/{room}?token={token1}") as ws1:
+        with client.websocket_connect(f"/ws/{room}?token={token2}") as ws2:
+            ws1.send_text(f"{name1}: hi from user 1")
+
+
+            assert ws1.receive_text() == f"{name1}: hi from user 1"
+            assert ws2.receive_text() == f"{name1}: hi from user 1"
+
+
+
+def test_websocket_history():
+    room = str(uuid.uuid4())[:8]
+    name1, token1 = make_user_token()
+    name2, token2 = make_user_token()
+
+    with client.websocket_connect(f"/ws/{room}?token={token1}") as ws1:
+        ws1.send_text(f"{name1}: saved message")
+        assert ws1.receive_text() == f"{name1}: saved message"
+
+    with client.websocket_connect(f"/ws/{room}?token={token2}") as ws2:
+        assert ws2.receive_text() == f"{name1}: saved message"

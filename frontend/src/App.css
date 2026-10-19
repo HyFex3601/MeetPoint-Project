@@ -14,7 +14,8 @@ input {
 nav a {
   text-decoration: none;
   padding: 0.2cm;
-  color: lab(61.12% -17.3 -33.53);
+  color: lab(90.35% -7.8 -1.03);
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 #UnBookBTN {
@@ -56,4 +57,45 @@ nav a {
   border: 1px solid red;
   outline: 2px solid red !important;
   box-shadow: 0 0 0 1px red !important;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+
+#message {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color:beige
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh; /* Viewport Height */
+  background: rgb(67, 106, 102);
+}
+
+.main-container {
+  width: 100%;
+  max-width: 100%; /* Prevents capping width */
+}
+
+nav {
+  display: flex;
+  align-items: center;      /* Vertically centers all text and buttons */
+  justify-content: center;  /* ADD THIS LINE: Centers everything horizontally */
+  gap: 15px;                /* Adds uniform space between all links */
+}
+
+/* This overrides the block behavior of the new div wrapper */
+.login-link-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;                 /* Space between image and "Login" text */
+}
+
+/* Keep your image small */
+#img1 {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }

@@ -54,7 +54,7 @@ function Chat() {
         {token ? (
             <form onSubmit={handleSend}>
                 {chat.map((item, index) => (
-                    <p key={index}>{item}</p>
+                    <p key={index} id="message">{item}</p>
                 ))}
                 <input
                     type="text"

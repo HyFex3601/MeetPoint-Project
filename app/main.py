@@ -12,8 +12,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from jose import jwt, JWTError
 
 
-
-
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -261,7 +259,3 @@ def unbooking(event_id: int, user: dict = Depends(get_current_user), db: Session
     db.delete(check_event)
     db.commit()
     return {"message": "Event deleted Successfully"}
-
-    
-        
-

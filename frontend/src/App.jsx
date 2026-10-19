@@ -8,6 +8,7 @@ import "./App.css";
 import MyBooking from "./MyBooking";
 import Chat from "./Chat";
 import { useState } from "react";
+import login from "./assets/login.svg"
 
 function App() {
 
@@ -23,7 +24,10 @@ function App() {
   return (
     <BrowserRouter>
       <nav>
-        <Link to="/login">Login</Link>
+        <div className="login-link-container">
+          <img id="img1" src={login} alt="" />
+          <Link to="/login">Login</Link>
+        </div>
         <Link to="/register">Register</Link>
         <Link to="/events">Events + Chat</Link>
         <Link to="/create-event">CreateEvent</Link>
