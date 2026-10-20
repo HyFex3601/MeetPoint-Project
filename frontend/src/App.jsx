@@ -9,6 +9,7 @@ import MyBooking from "./MyBooking";
 import Chat from "./Chat";
 import { useState } from "react";
 import login from "./assets/login.svg"
+import logout from "./assets/logout.png"
 
 function App() {
 
@@ -25,14 +26,14 @@ function App() {
     <BrowserRouter>
       <nav>
         <div className="login-link-container">
-          <img id="img1" src={login} alt="" />
-          <Link to="/login">Login</Link>
+          <img id="img1" src={login} alt="" /><Link to="/login">Login</Link>
+          
         </div>
         <Link to="/register">Register</Link>
         <Link to="/events">Events + Chat</Link>
         <Link to="/create-event">CreateEvent</Link>
         <Link to="/my-booking">MyBooking</Link>
-        {token && <button id="logoutBTN" onClick={handleLogout}>Logout</button>}
+        {token && <button onClick={handleLogout}><img id="logoutBTN" src={logout} alt=""/></button>}
         
       </nav>
       <Routes>
