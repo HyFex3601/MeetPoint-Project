@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { Notice, useNotice} from "./Notice";
 
 function Register() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+
+    const [notice, setNotice] = useNotice();
 
     function handleRegister(event) {
         event.preventDefault();
@@ -23,16 +26,20 @@ function Register() {
         })
         .then(result => {
             if (result.status === 200) {
-                alert("Account Created")
+                setNotice({type: "success", text: "Account Created"})
+                setTimeout(() => { window.location.href = "/login" }, 1000);
             } else {
-                alert(result.data.detail)
+                setNotice({type: "error", text: typeof result.data.detail === "string" ? result.data.detail: "Error Occurred"})
+    
             }
         })
+        .catch(() => setNotice({type: "error", text: "Could not reach the server. Please try again."}));
     }
 
     return (
         <div>
             <h1>Meetpoint Register</h1>
+            <Notice notice={notice}/>
             <form onSubmit={handleRegister}>
                 <input 
                 type="text"

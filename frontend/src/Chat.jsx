@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef} from "react"
+import { useState, useEffect, useRef} from "react";
+import { Notice, useNotice } from "./Notice";
 
 
 
@@ -6,7 +7,7 @@ function Chat() {
     const [chat, setChat] = useState([]);
     const socketRef = useRef(null);
     const [newMessage, setNewMessage] = useState("");
-
+    const [notice, setNotice] = useNotice()
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
@@ -35,14 +36,18 @@ function Chat() {
 
 
         if(!token) {
-            alert("You must be logged in to Chat")
-            window.location.href = "/login";
+            setNotice({type: "error", text: "Please log in to Chat"})
+            setTimeout(() => {window.location.href = "/login"}, 1000)
             return;
         }
         const payload = JSON.parse(atob(token.split(".")[1]))
         const username = payload.sub
         
-        socketRef.current.send(username + ": " + newMessage);
+        if(!newMessage.trim()) {
+            setNotice({type: "error", text: "Please type a message to send"})
+            return;
+        }
+        socketRef.current.send(username + ": " + newMessage.trim());
         setNewMessage("");
     }
 
@@ -51,10 +56,11 @@ function Chat() {
     return (
     <div>
         <h1>Global Chat</h1>
+        <Notice notice={notice}/>
         {token ? (
             <form onSubmit={handleSend}>
                 {chat.map((item, index) => (
-                    <p key={index} id="message">{item}</p>
+                    <p key={index} className="message">{item}</p>
                 ))}
                 <input
                     type="text"

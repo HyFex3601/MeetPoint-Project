@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import Chat from "./Chat";
+import { useNotice, Notice } from "./Notice";
+
 
 function Events() {
     const [events, setEvents] = useState([]);
+
+    const [notice, setNotice] = useNotice();
+    
 
     useEffect(() => {
         fetch("http://localhost:8000/Events")
@@ -14,8 +19,7 @@ function Events() {
         const token = localStorage.getItem("access_token");
 
         if (!token) {
-            alert ("You must be logged in to Book");
-            window.location.href = "/login";
+            setNotice({type: "error", text: "Please log in to Book"})
             return;
         }
 
@@ -32,11 +36,12 @@ function Events() {
             })
             .then(result => {
                 if (result.status === 200) {
-                    alert("Successfully Booked");
+                    setNotice({type: "success", text: "Successfully Booked"});
                 } else {
-                    alert(result.data.detail);
+                    setNotice({type: "error", text: typeof result.data.detail === "string" ? result.data.detail : "Something went wrong. Please try again."})
                 }
-            });
+            })
+            .catch(() => setNotice({type: "error", text: "Could not reach the server. Please try again."}));
     }
 
     function handleDelete(eventId) {
@@ -44,8 +49,7 @@ function Events() {
         const token = localStorage.getItem("access_token");
 
         if (!token) {
-            alert("You must be logged in to Delete an Event");
-            window.location.href = "/login";
+            setNotice({type: "error", text: "Please log in to delete an event"})
             return;
         }
 
@@ -58,20 +62,21 @@ function Events() {
         })
         .then(async (response) => {
             if (response.status === 200 || response.status === 204) {
-                alert("Event Deleted Successfully");
+                setNotice({type: "deleted", text: "Event Deleted Successfully"})
                 setEvents(prev => prev.filter(e => e.id !== eventId));
             } else {
                 const data = await response.json().catch(() => ({}));
-                alert(data.detail || "Failed to delete event");
+                setNotice({type: "error", text: typeof data.detail === "string" ? data.detail : "Failed to delete event"});
             }
         })
-        .catch(() => alert("Network error while deleting event"))
+        .catch(() => setNotice({type: "error", text: "Network error while deleting event"}));
     }
 
     return (
         <div style={{display: "flex", gap: "20px"}}>
             <div style={{flex: 1}}>
                 <h1>Upcoming Events</h1>
+                <Notice notice={notice}/>
                 <div style={{
                     display: "grid",
                     gridTemplateColumns: "repeat(4, 1fr)",
@@ -89,9 +94,9 @@ function Events() {
                                 <p>Location: {event.location}</p>
                                 <p>Date: {new Date(event.date).toLocaleDateString()}</p>
                                 <p>Capacity: {event.capacity}</p>
-                                <div id="BTNContainer">
-                                    <button id="bookBTN" onClick={() => handleBooking(event.id)}>Book</button>
-                                    <button id="deleteBTN"onClick={() => handleDelete(event.id)}>Delete</button>
+                                <div className="BTNContainer">
+                                    <button className="bookBTN" onClick={() => handleBooking(event.id)}>Book</button>
+                                    <button className="deleteBTN" onClick={() => handleDelete(event.id)}>Delete</button>
                                 </div>
                             </div>
                         );

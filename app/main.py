@@ -232,11 +232,14 @@ async def chat_endpoint(websocket: WebSocket, room_id: str, token: str, db: Sess
             data = await websocket.receive_text()
 
             content_part = ":".join(data.split(":")[1:]).strip()
+
+            if not content_part:
+                continue
+            
             new_message = models.Message(room_id=room_id, username=username, content=content_part)
 
             db.add(new_message)
             db.commit()
-            
             for connection in active_connections[room_id]:
                 await connection.send_text(username + ": " + content_part)
         

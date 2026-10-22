@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNotice, Notice } from "./Notice" 
 
 
 function CreateEvent() {
@@ -7,6 +8,8 @@ function CreateEvent() {
     const [date, setDate] = useState("")
     const [location, setLocation] = useState("")
     const [capacity, setCapacity] = useState("")
+    
+    const [notice, setNotice] = useNotice();
 
 
     function handleCreateEvent(event) {
@@ -15,8 +18,7 @@ function CreateEvent() {
         const token = localStorage.getItem("access_token")
 
         if (!token) {
-            alert("You must be logged in to Create an Event");
-            window.location.href = "/login";
+            setNotice({type: "error", text: "Please log in to create an event"});
             return;
         }
 
@@ -34,18 +36,24 @@ function CreateEvent() {
         })
         .then(result => {
             if (result.status === 200) {
-                alert("Event Created Successfully")
-                window.location.href="/events"
+                setNotice({type: "success", text: "Event Created Successfully"})
+                setTitle("");
+                setDescription("");
+                setDate("");
+                setLocation("");
+                setCapacity("");
             } else {
-                alert(result.data.detail)
+                setNotice({type: "error", text: typeof result.data.detail === "string" ? result.data.detail : "Please check the form and try again"})
             }
         })
+        .catch(() => setNotice({type: "error", text: "Could not reach the server. Please try again"}))
 
     }
 
     return (
         <div>
             <h1>Create Event</h1>
+            <Notice notice={notice} />
             <form onSubmit={handleCreateEvent}>
                 <input
                 type="text"

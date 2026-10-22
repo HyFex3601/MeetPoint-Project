@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { Notice, useNotice } from "./Notice";
 
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    const [notice, setNotice] = useNotice();
 
 
     function handleLogin(event) {
@@ -28,17 +30,20 @@ function Login() {
         .then(result => {
             if (result.status === 200) {
                 localStorage.setItem("access_token", result.data.access_token);
-                alert("Login Successful");
-                window.location.href="/events";
+                setNotice({type: "success", text: "Login Successful"})
+                setTimeout(() => {window.location.href="/events"}, 1000)
             } else {
-                alert(result.data.detail)
+                setNotice({type: "error", text: typeof result.data.detail === "string" ? result.data.detail : "Invalid username or password"})
+                return;
             }
-        });
+        })
+        .catch(() => setNotice({type: "error", text: "Could not reach the server. Please try again"}));
     }
 
     return (
         <div>
             <h1>Meetpoint Login</h1>
+            <Notice notice={notice} />
             <form onSubmit={handleLogin}>
                 <input
                 type="text"

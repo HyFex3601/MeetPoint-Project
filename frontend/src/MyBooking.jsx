@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
+import { useNotice, Notice } from "./Notice";
 
 
 function MyBooking() {
     const [booking, setBooking] = useState([]);
+
+    const [notice, setNotice] = useNotice();
     
-
-
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
 
         if (!token) {
-            alert("You must be logged in to view you Booking");
-            window.location.href = "/login";
+            setNotice({type: "error", text: "Please log in to view your bookings"})
             return;
         }
         fetch("http://localhost:8000/my-bookings", {
@@ -35,8 +35,7 @@ function MyBooking() {
         const token = localStorage.getItem("access_token");
 
         if (!token) {
-            alert("You must be logged in to Delete an Event");
-            window.location.href = "/login";
+            setNotice({type: "error", text: "Please log in to remove a booking"});
             return;
         }
         fetch("http://localhost:8000/my-booking/" + eventId, {
@@ -47,22 +46,23 @@ function MyBooking() {
         })
         .then(async (response) => {
             if (response.status === 200) {
-                alert("Event Deleted Successfully");
+                setNotice({type: "deleted", text: "Booking removed Successfully"})
                 setBooking(prev => prev.filter(e => e.id !== eventId));
             } else {
                 const data = await response.json().catch(() => ({}));
-                alert(data.detail)
+                setNotice({type: "error", text: typeof data.detail === "string" ? data.detail : "Something went wrong. Please try again"})
             }
         })
-        .catch(() => alert("Network error while deleting event"))
+        .catch(() => setNotice({type: "error", text: "Network error while removing booking"}));
 
     }
 
     return (
         <div>
             <h1>My Booking</h1>
+            <Notice notice={notice} />
             {booking.length === 0 ? (
-                <p>You have no bookings yet.</p>
+                <p style={{color: "#FBFAF5"}}>You have no bookings yet</p>
             ) : (
                 booking.map((item) => {
                     return(
@@ -72,7 +72,7 @@ function MyBooking() {
                             <p>Location: {item.location}</p>
                             <p>Date: {new Date(item.date).toLocaleDateString()}</p>
                             <p>Capacity: {item.capacity}</p>
-                            <button id="UnBookBTN" onClick={() => handleUnBook(item.id)}>UnBook</button>
+                            <button className="UnBookBTN" onClick={() => handleUnBook(item.id)}>UnBook</button>
                         </div>
                     )
                 })

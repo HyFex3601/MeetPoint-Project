@@ -310,3 +310,17 @@ def test_websocket_cannot_fake_username():
     with client.websocket_connect(f"/ws/{room}?token={token}") as ws:
         ws.send_text("someone_else: I am pretending")
         assert ws.receive_text() == f"{name}: I am pretending"
+
+
+
+
+def test_blank_message():
+    room = str(uuid.uuid4())[:8]
+
+    name, token = make_user_token()
+
+    with client.websocket_connect(f"/ws/{room}?token={token}") as ws:
+        ws.send_text(f"{name}: ")
+        ws.send_text(f"{name}: real message")
+
+        assert ws.receive_text() == f"{name}: real message"

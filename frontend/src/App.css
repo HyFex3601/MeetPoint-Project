@@ -19,7 +19,7 @@ nav a {
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-#UnBookBTN {
+.UnBookBTN {
   max-width: 150px;
   margin: auto;
   background-color: red;
@@ -34,7 +34,7 @@ nav a {
 
 }
 
-#deleteBTN {
+.deleteBTN {
   gap: 1pxx;
   background-color: red;
   color: white;
@@ -43,7 +43,7 @@ nav a {
   box-shadow: 0 0 0 1px red !important;
 
 }
-#bookBTN {
+.bookBTN {
   background-color: green;
   color: white;
   border: 1px solid green;
@@ -69,7 +69,7 @@ nav a {
 
 
 
-#message {
+.message {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color:beige
 }
