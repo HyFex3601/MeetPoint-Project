@@ -5,7 +5,6 @@ form {
   margin: auto;
 }
 
-
 input {
   margin-bottom: 10px;
   padding: 8px;
@@ -16,73 +15,55 @@ nav a {
   text-decoration: none;
   padding: 0.2cm;
   color: lab(90.35% -7.8 -1.03);
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+/* ---------- Focus style (shows keyboard users where they are) ---------- */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible,
+.chat-log:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* ---------- Buttons ---------- */
 .UnBookBTN {
   width: 150px;
   border-radius: 8px;
   margin: auto;
-  background-color: red;
-  border-color: red;
+  background-color: #c00000;
+  border-color: #c00000;
+  color: white;
 }
 
 .BTNContainer {
-  display: flex;     
-  gap: 15px;  
+  display: flex;
+  gap: 15px;
   justify-content: center;
-  
-  
-  
-
 }
 
 .deleteBTN {
-  gap: 1pxx;
-  background-color: red;
+  background-color: #c00000;
   color: white;
   border-radius: 10px;
-  border: 1px solid red;
-  outline: 2px solid red !important;
-  box-shadow: 0 0 0 1px red !important;
-
+  border: 1px solid #c00000;
 }
+
 .bookBTN {
   background-color: green;
   color: white;
   border-radius: 10px;
   border: 1px solid green;
-  outline: 2px solid green !important;
-  box-shadow: 0 0 0 2px green !important;
 }
 
 #logoutBTN {
   display: block;
   width: 30px;
   height: 30px;
-  
-  background: transparent !important;     
-  border: none;           
-  outline: none !important; 
-  box-shadow: none !important; 
-
-
+  background: transparent !important;
+  border: none;
   cursor: pointer;
-  
-  
-}
-
-#title-holder, #description-holder, #datetime-holder, #location-holder, #capacity-holder {
-  background-color: rgb(84, 116, 84);
-  border-top-color: rgb(29, 44, 29);
-  border-left-color: rgb(29, 44, 29);
-  border-right-color: rgb(29, 44, 29);
-  border-bottom-color: rgb(29, 44, 29);
-}
-
-#create-text {
-  color: white;
-
 }
 
 #createBTN {
@@ -92,7 +73,6 @@ nav a {
   border-color: grey;
   padding: 10px;
   background-color: green;
-
 }
 
 .chatBTN {
@@ -106,115 +86,9 @@ nav a {
   border-left-color: rgb(29, 44, 29);
   border-right-color: rgb(29, 44, 29);
   border-bottom-color: rgb(29, 44, 29);
-  
 }
 
-
-.message {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  color:beige;
-
-
-}
-
-#msg-holder {
-  background-color: rgb(84, 116, 84);
-  border-top-color: rgb(29, 44, 29);
-  border-left-color: rgb(29, 44, 29);
-  border-right-color: rgb(29, 44, 29);
-  border-bottom-color: rgb(29, 44, 29);
-}
-
-#msg-text {
-  color: white;
-}
-
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100vh; /* Viewport Height */
-  background: rgb(67, 106, 102);
-}
-
-.main-container {
-  width: 100%;
-  max-width: 100%; /* Prevents capping width */
-}
-
-nav {
-  display: flex;
-  align-items: center;      /* Vertically centers all text and buttons */
-  justify-content: center;  /* ADD THIS LINE: Centers everything horizontally */
-  gap: 15px;                /* Adds uniform space between all links */
-}
-
-/* This overrides the block behavior of the new div wrapper */
-.login-link-container {
-  display: flex;
-  align-items: center;
-  gap: 6px;                 /* Space between image and "Login" text */
-}
-
-/* Keep your image small */
-#img1 {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-}
-
-.field {
-    position: relative;
-    margin: 16px 0;
-}
-
-.field input {
-    width: 100%;
-    padding: 25px 12px 6px;
-    box-sizing: border-box;
-    text-align: left;
-}
-
-.field label {
-    position: absolute;
-    left: 12px;
-    top: 14px;
-    color: #dcd1d1;
-    transition: all 0.2s;
-    pointer-events: none;
-}
-
-.field input:focus + label,
-.field input:not(:placeholder-shown) + label {
-    top: 4px;
-    font-size: 12px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .field label {
-        transition: none;
-    }
-}
-
-
-.event-info {
-  color: white;
-}
-
-#login-username, #login-password, #register-username, #register-password{
-  background-color: rgb(84, 116, 84);
-  border-top-color: rgb(29, 44, 29);
-  border-left-color: rgb(29, 44, 29);
-  border-right-color: rgb(29, 44, 29);
-  border-bottom-color: rgb(29, 44, 29);
-}
-
-#user-password {
-  color: rgb(255, 255, 255);
-}
-
-#loginBTN, #register-button{
-
+#loginBTN, #register-button {
   width: 200px;
   margin: auto;
   border-radius: 10px;
@@ -225,14 +99,121 @@ nav {
   border-left-color: rgb(92, 118, 92);
   border-right-color: rgb(92, 118, 92);
   border-bottom-color: rgb(92, 118, 92);
-
 }
 
-#logo{
-  margin-right: 950px;
+/* ---------- Input colors ---------- */
+#title-holder, #description-holder, #datetime-holder, #location-holder, #capacity-holder,
+#msg-holder,
+#login-username, #login-password, #register-username, #register-password {
+  background-color: rgb(84, 116, 84);
+  border-top-color: rgb(29, 44, 29);
+  border-left-color: rgb(29, 44, 29);
+  border-right-color: rgb(29, 44, 29);
+  border-bottom-color: rgb(29, 44, 29);
+}
+
+#create-text,
+#msg-text {
+  color: white;
+}
+
+#user-password {
+  color: rgb(255, 255, 255);
+}
+
+/* ---------- Chat ---------- */
+.message {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: beige;
 }
 
 .chat-log {
   max-height: 300px;
   overflow-y: auto;
+}
+
+/* Hidden from the eye, still read by screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Page layout ---------- */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: rgb(67, 106, 102);
+}
+
+.main-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.login-link-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#img1 {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+#logo {
+  margin-right: 950px;
+}
+
+.event-info {
+  color: white;
+}
+
+/* ---------- Floating labels ---------- */
+.field {
+  position: relative;
+  margin: 16px 0;
+}
+
+.field input {
+  width: 100%;
+  padding: 25px 12px 6px;
+  box-sizing: border-box;
+  text-align: left;
+  color: #ffffff;
+}
+
+.field label {
+  position: absolute;
+  left: 12px;
+  top: 14px;
+  color: #ffffff;
+  transition: all 0.2s;
+  pointer-events: none;
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label {
+  top: 4px;
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field label {
+    transition: none;
+  }
 }

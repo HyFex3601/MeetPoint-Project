@@ -12,7 +12,8 @@ function Chat() {
 
     const logRef = useRef(null)
 
-    const [announce, setAnnounce] = useState(false)
+    const announceRef = useRef(false);
+    const [latest, setLatest] = useState("");
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
@@ -29,12 +30,15 @@ function Chat() {
         socketRef.current = socket;
 
         socket.onopen = () => {
-            timer = setTimeout(() => setAnnounce(true), 1500)
+            timer = setTimeout(() => { announceRef.current = true; }, 1500);
         };
 
         socket.onmessage = (event) => {
             setChat((prevChat) => [...prevChat, event.data]);
-        };
+            if (announceRef.current) {
+                setLatest(event.data);
+            }
+};
 
         return () => {
             clearTimeout(timer);
@@ -83,11 +87,12 @@ function Chat() {
         <Notice notice={notice}/>
         {token ? (
             <>
+                <div role="status" className="visually-hidden">{latest}</div>
                 <div 
                 ref={logRef}
                 className="chat-log"
                 role="log" 
-                aria-live={announce ? "polite" : "off"}
+                aria-live="off"
                 aria-label="Chat messages"
                 tabIndex={0}
                 >
