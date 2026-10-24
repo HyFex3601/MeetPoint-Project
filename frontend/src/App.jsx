@@ -23,6 +23,11 @@ function App() {
     
   }
   return (
+    <>
+
+    <h2 id="logo">MeetPoint</h2>
+
+
     <BrowserRouter>
       <nav>
         <div className="login-link-container">
@@ -44,6 +49,7 @@ function App() {
         <Route path="/my-booking" element={<MyBooking />} />
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 

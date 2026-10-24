@@ -55,37 +55,62 @@ function CreateEvent() {
             <h1>Create Event</h1>
             <Notice notice={notice} />
             <form onSubmit={handleCreateEvent}>
-                <input
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                />
-                <input
-                type="text"
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                />
-                <input
-                type="datetime-local"
-                placeholder="Date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                />
-                <input
-                type="text"
-                placeholder="Location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                />
-                <input
-                type="number"
-                placeholder="Capacity"
-                value={capacity}
-                onChange={(e) => setCapacity(e.target.value)}
-                />
-                <button>Create Event</button>
+
+                <div className="field">
+                    <input
+                        id="title-holder"
+                        type="text"
+                        placeholder=" "
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <label id="create-text" htmlFor="title-holder">Title</label>
+                </div>
+
+                <div className="field">
+                    <input
+                        id="description-holder"
+                        type="text"
+                        placeholder=" "
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <label id="create-text" htmlFor="description-holder">Description</label>
+                </div>
+
+                <div className="field">
+                    <input
+                        id="datetime-holder"
+                        type="datetime-local"
+                        placeholder=" "
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                    />
+                    <label id="create-text" htmlFor="datetime-holder">Date</label>
+                </div>
+
+                <div className="field">
+                    <input
+                        id="location-holder"
+                        type="text"
+                        placeholder=" "
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                    />
+                    <label id="create-text" htmlFor="location-holder">Location</label>
+                </div>
+
+                <div className="field">
+                    <input
+                        id="capacity-holder"
+                        type="number"
+                        placeholder=" "
+                        value={capacity}
+                        onChange={(e) => setCapacity(e.target.value)}
+                    />
+                    <label id="create-text" htmlFor="capacity-holder">Capacity</label>
+                </div>
+                <button id="createBTN">Create Event</button>
             </form>
         </div>
     )

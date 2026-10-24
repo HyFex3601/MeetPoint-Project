@@ -41,19 +41,29 @@ function Register() {
             <h1>Meetpoint Register</h1>
             <Notice notice={notice}/>
             <form onSubmit={handleRegister}>
-                <input 
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                />
-                <input 
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange = {(e) => setPassword(e.target.value)}
-                />
-                <button>Register</button>
+                <div className="field">
+                    <input 
+                        id="register-username"
+                        type="text"
+                        placeholder=" "
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <label id="user-password" htmlFor="register-username">Username</label>
+
+                </div>
+
+                <div className="field">
+                    <input 
+                        id="register-password"
+                        type="password"
+                        placeholder=" "
+                        value={password}
+                        onChange = {(e) => setPassword(e.target.value)}
+                    />
+                    <label id="user-password" htmlFor="register-password">Password</label>
+                </div>
+                <button id="register-button">Register</button>
             </form>
         </div>
     )

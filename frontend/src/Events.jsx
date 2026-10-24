@@ -85,15 +85,18 @@ function Events() {
                     {events.map((event) => {
                         return (
                             <div key={event.id} style={{
-                                border: "1px solid #ccc",
+                                border: "1px solid #ffffff",
                                 borderRadius: "8px",
-                                padding: "16px"
+                                padding: "20px",
+                                
                             }}>
-                                <h3>Title: {event.title}</h3>
-                                <p>Description: {event.description}</p>
-                                <p>Location: {event.location}</p>
-                                <p>Date: {new Date(event.date).toLocaleDateString()}</p>
-                                <p>Capacity: {event.capacity}</p>
+                                <div className="event-info">
+                                    <h3 style={{color: "rgb(232, 231, 173)"}}>Event:</h3><h3>{event.title}</h3>
+                                    <p>Description: {event.description}</p>
+                                    <p>Location: {event.location}</p>
+                                    <p>Date: {new Date(event.date).toLocaleDateString()}</p>
+                                    <p>Capacity: {event.capacity}</p>
+                                </div>
                                 <div className="BTNContainer">
                                     <button className="bookBTN" onClick={() => handleBooking(event.id)}>Book</button>
                                     <button className="deleteBTN" onClick={() => handleDelete(event.id)}>Delete</button>

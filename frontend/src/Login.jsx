@@ -45,19 +45,29 @@ function Login() {
             <h1>Meetpoint Login</h1>
             <Notice notice={notice} />
             <form onSubmit={handleLogin}>
-                <input
-                type="text"
-                placeholder="Username"
-                value={username} 
-                onChange={(e) => setUsername(e.target.value)}
-                />
-                <input 
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange = {(e) => setPassword(e.target.value)}
-                />
-                <button>Login</button>
+                <div className="field">
+                    <input
+                        id="login-username"
+                        type="text"
+                        placeholder=" "
+                        value={username} 
+                        onChange={(e) => setUsername(e.target.value)}
+                        />
+                    <label id="user-password" htmlFor="login-username">Username</label>
+                </div>
+
+                <div className="field">
+                    <input 
+                        id="login-password"
+                        type="password"
+                        placeholder=" "
+                        value={password}
+                        onChange = {(e) => setPassword(e.target.value)}
+                    />
+                    <label id="user-password" htmlFor="login-password">Password</label>
+                </div>
+
+                <button id="loginBTN">Login</button>
             </form>
         </div>
     );

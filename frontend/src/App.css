@@ -20,16 +20,19 @@ nav a {
 }
 
 .UnBookBTN {
-  max-width: 150px;
+  width: 150px;
+  border-radius: 8px;
   margin: auto;
   background-color: red;
   border-color: red;
 }
 
-#BTNContainer {
+.BTNContainer {
   display: flex;     
   gap: 15px;  
   justify-content: center;
+  
+  
   
 
 }
@@ -38,6 +41,7 @@ nav a {
   gap: 1pxx;
   background-color: red;
   color: white;
+  border-radius: 10px;
   border: 1px solid red;
   outline: 2px solid red !important;
   box-shadow: 0 0 0 1px red !important;
@@ -46,6 +50,7 @@ nav a {
 .bookBTN {
   background-color: green;
   color: white;
+  border-radius: 10px;
   border: 1px solid green;
   outline: 2px solid green !important;
   box-shadow: 0 0 0 2px green !important;
@@ -67,11 +72,61 @@ nav a {
   
 }
 
+#title-holder, #description-holder, #datetime-holder, #location-holder, #capacity-holder {
+  background-color: rgb(84, 116, 84);
+  border-top-color: rgb(29, 44, 29);
+  border-left-color: rgb(29, 44, 29);
+  border-right-color: rgb(29, 44, 29);
+  border-bottom-color: rgb(29, 44, 29);
+}
+
+#create-text {
+  color: white;
+
+}
+
+#createBTN {
+  width: 200px;
+  margin: auto;
+  border-radius: 10px;
+  border-color: grey;
+  padding: 10px;
+  background-color: green;
+
+}
+
+.chatBTN {
+  width: 200px;
+  margin: auto;
+  border-radius: 10px;
+  border-color: rgb(84, 116, 84);
+  padding: 10px;
+  background-color: rgb(84, 116, 84);
+  border-top-color: rgb(29, 44, 29);
+  border-left-color: rgb(29, 44, 29);
+  border-right-color: rgb(29, 44, 29);
+  border-bottom-color: rgb(29, 44, 29);
+  
+}
 
 
 .message {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  color:beige
+  color:beige;
+
+
+}
+
+#msg-holder {
+  background-color: rgb(84, 116, 84);
+  border-top-color: rgb(29, 44, 29);
+  border-left-color: rgb(29, 44, 29);
+  border-right-color: rgb(29, 44, 29);
+  border-bottom-color: rgb(29, 44, 29);
+}
+
+#msg-text {
+  color: white;
 }
 
 body, html {
@@ -108,3 +163,76 @@ nav {
   object-fit: contain;
 }
 
+.field {
+    position: relative;
+    margin: 16px 0;
+}
+
+.field input {
+    width: 100%;
+    padding: 25px 12px 6px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.field label {
+    position: absolute;
+    left: 12px;
+    top: 14px;
+    color: #dcd1d1;
+    transition: all 0.2s;
+    pointer-events: none;
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label {
+    top: 4px;
+    font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .field label {
+        transition: none;
+    }
+}
+
+
+.event-info {
+  color: white;
+}
+
+#login-username, #login-password, #register-username, #register-password{
+  background-color: rgb(84, 116, 84);
+  border-top-color: rgb(29, 44, 29);
+  border-left-color: rgb(29, 44, 29);
+  border-right-color: rgb(29, 44, 29);
+  border-bottom-color: rgb(29, 44, 29);
+}
+
+#user-password {
+  color: rgb(255, 255, 255);
+}
+
+#loginBTN, #register-button{
+
+  width: 200px;
+  margin: auto;
+  border-radius: 10px;
+  border-color: rgb(84, 116, 84);
+  padding: 10px;
+  background-color: rgb(92, 118, 92);
+  border-top-color: rgb(92, 118, 92);
+  border-left-color: rgb(92, 118, 92);
+  border-right-color: rgb(92, 118, 92);
+  border-bottom-color: rgb(92, 118, 92);
+
+}
+
+#logo{
+  margin-right: 950px;
+}
+
+.chat-log {
+  max-height: 300px;
+  overflow-y: auto;
+}
