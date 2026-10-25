@@ -6,6 +6,11 @@ function MyBooking() {
     const [booking, setBooking] = useState([]);
 
     const [notice, setNotice] = useNotice();
+
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
+
+    const [loggedOut, setLoggedOut] = useState(false);
     
 
     useEffect(() => {
@@ -13,6 +18,7 @@ function MyBooking() {
 
         if (!token) {
             setNotice({type: "error", text: "Please log in to view your bookings"})
+            setLoading(false);
             return;
         }
         fetch("http://localhost:8000/my-bookings", {
@@ -21,7 +27,12 @@ function MyBooking() {
                 "Authorization": "Bearer " + token
             }
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Bad Response")
+                }
+                return response.json();
+            })
             .then(data => {
                 if (Array.isArray(data)) {
                     setBooking(data);
@@ -29,6 +40,10 @@ function MyBooking() {
                     setBooking([]);
                 }
             })
+            .catch(() => setLoadError(true))
+            .finally(() => setLoading(false));
+            
+            
     }, []);
 
     function handleUnBook(eventId) {
@@ -61,22 +76,23 @@ function MyBooking() {
         <div>
             <h1>My Booking</h1>
             <Notice notice={notice} />
-            {booking.length === 0 ? (
-                <p style={{color: "#FBFAF5"}}>You have no bookings yet</p>
-            ) : (
-                booking.map((item) => {
-                    return(
-                        <div key={item.id}>
-                            <h3>Title: {item.title}</h3>
-                            <p>Description: {item.description}</p>
-                            <p>Location: {item.location}</p>
-                            <p>Date: {new Date(item.date).toLocaleDateString()}</p>
-                            <p>Capacity: {item.capacity}</p>
-                            <button className="UnBookBTN" onClick={() => handleUnBook(item.id)}>UnBook</button>
-                        </div>
-                    )
-                })
-            )}
+            <div className="loadmsgs">
+                {loading && <p className="status-text" role="status">Loading your bookings...</p>}
+                {loadError && <p className="status-text" role="alert">We could not load your bookings. Please refresh the page and try again.</p>}
+                {loggedOut && <p className="status-text">Please log in to see your bookings.</p>}
+                {!loading && !loadError && booking.length === 0 && <p className="status-text">You have no bookings yet.</p>}
+            </div>
+
+            {booking.map((item) => (
+                <div key={item.id}>
+                    <h3>Title: {item.title}</h3>
+                    <p>Description: {item.description}</p>
+                    <p>Location: {item.location}</p>
+                    <p>Date: {new Date(item.date).toLocaleDateString()}</p>
+                    <p>Capacity: {item.capacity}</p>
+                    <button className="UnBookBTN" onClick={() => handleUnBook(item.id)}>UnBook</button>
+                </div>
+            ))}
         </div>
     )
 

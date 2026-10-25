@@ -8,11 +8,20 @@ function Events() {
 
     const [notice, setNotice] = useNotice();
     
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
 
     useEffect(() => {
         fetch("http://localhost:8000/Events")
-            .then(response => response.json())
-            .then(data => setEvents(data));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Bad Response");
+                }
+                return response.json();
+            })
+            .then(data => setEvents(data))
+            .catch(() => setLoadError(true))
+            .finally(() => setLoading(false))
     }, []);
 
     function handleBooking(eventId) {
@@ -77,6 +86,11 @@ function Events() {
             <div className="events-main">
                 <h1>Upcoming Events</h1>
                 <Notice notice={notice}/>
+                <div className="loadmsgs">
+                    {loading && <p role="status">Loading events...</p>}
+                    {loadError && <p role="alert">We could not load the events. Please refresh the page</p>}
+                    {!loading && !loadError && events.length === 0 && <p>No events yet</p>}
+                </div>
                 <div style={{
                     display: "grid",
                     gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
