@@ -73,13 +73,13 @@ function Events() {
     }
 
     return (
-        <div style={{display: "flex", gap: "20px"}}>
-            <div style={{flex: 1}}>
+        <div className="events-layout">
+            <div className="events-main">
                 <h1>Upcoming Events</h1>
                 <Notice notice={notice}/>
                 <div style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
                     gap: "16px"
                 }}>
                     {events.map((event) => {
@@ -87,8 +87,7 @@ function Events() {
                             <div key={event.id} style={{
                                 border: "1px solid #ffffff",
                                 borderRadius: "8px",
-                                padding: "20px",
-                                
+                                padding: "20px"
                             }}>
                                 <div className="event-info">
                                     <h3 style={{color: "rgb(232, 231, 173)"}}>Event:</h3><h3>{event.title}</h3>
@@ -106,7 +105,7 @@ function Events() {
                     })}
                 </div>
             </div>
-            <div style={{width: "300px"}}>
+            <div className="chat-side">
                 <Chat />
             </div>
         </div>
