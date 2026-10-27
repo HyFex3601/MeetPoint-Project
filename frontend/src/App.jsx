@@ -38,17 +38,21 @@ function App() {
         <Link to="/events">Events + Chat</Link>
         <Link to="/create-event">CreateEvent</Link>
         <Link to="/my-booking">MyBooking</Link>
-        {token && <button onClick={handleLogout}><img id="logoutBTN" src={logout} alt=""/></button>}
+        {token && <button onClick={handleLogout} aria-label="Log out"><img id="logoutBTN" src={logout} alt=""/></button>}
         
       </nav>
-      <Routes>
-        <Route path="/events" element={<Events />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} /> 
-        <Route path="/create-event" element={<CreateEvent />} />
-        <Route path="/my-booking" element={<MyBooking />} />
-      </Routes>
+      <main>
+        <Routes>
+          <Route path="/events" element={<Events />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} /> 
+          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/my-booking" element={<MyBooking />} />
+        </Routes>
+      </main>
     </BrowserRouter>
+      
+    
     </>
   );
 }

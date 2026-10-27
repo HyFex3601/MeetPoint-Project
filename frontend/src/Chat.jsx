@@ -83,7 +83,7 @@ function Chat() {
 
     return (
     <div>
-        <h1>Global Chat</h1>
+        <h2>Global Chat</h2>
         <Notice notice={notice}/>
         {token ? (
             <>
@@ -115,7 +115,7 @@ function Chat() {
                 </form>
             </>
         ) : (
-            <p>Please <a href="/login">login</a> to join the chat.</p>
+            <p className="status-text" aria-label="Log out">Please <a href="/login">login</a> to join the chat.</p>
         )}
     </div>
     );

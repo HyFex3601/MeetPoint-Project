@@ -149,6 +149,7 @@ body, html {
   width: 100%;
   min-height: 100vh;
   background: rgb(67, 106, 102);
+  color: #ffffff;
 }
 
 .main-container {
@@ -245,4 +246,19 @@ nav {
 
 .loadmsgs {
   color: #ffffff;
+}
+
+.event-info h2 {
+  color: white;
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+body h1, body h2 {
+  color: #ffffff;
+}
+
+main a {
+  color: #ffffff;
+  text-decoration: underline;
 }

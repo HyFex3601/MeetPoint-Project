@@ -104,7 +104,8 @@ function Events() {
                                 padding: "20px"
                             }}>
                                 <div className="event-info">
-                                    <h3 style={{color: "rgb(232, 231, 173)"}}>Event:</h3><h3>{event.title}</h3>
+                                    <p style={{color: "rgb(232, 231, 173)"}}>Event:</p>
+                                    <h2>{event.title}</h2>
                                     <p>Description: {event.description}</p>
                                     <p>Location: {event.location}</p>
                                     <p>Date: {new Date(event.date).toLocaleDateString()}</p>
