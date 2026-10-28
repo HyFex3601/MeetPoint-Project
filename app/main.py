@@ -9,8 +9,7 @@ from fastapi import Request
 from app.auth import hash_password, verify_password, create_access_token, get_current_user, require_role, get_current_user_from_token
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
-from jose import jwt, JWTError
-
+from app.mongo import posts_collection, client, database
 
 Base.metadata.create_all(bind=engine)
 
@@ -36,6 +35,8 @@ class EventCreate(BaseModel):
     location: str
     capacity: int
 
+class PostsCreate(BaseModel):
+    text: str
 
 def get_db():
     db = SessionLocal()
@@ -43,6 +44,8 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
 
 def send_confirmation_email(username: str, event_title: str):
     import time
@@ -261,3 +264,36 @@ def unbooking(event_id: int, user: dict = Depends(get_current_user), db: Session
     db.delete(check_event)
     db.commit()
     return {"message": "Event deleted Successfully"}
+
+
+
+@app.post("/posts")
+def create_post(post: PostsCreate, user: dict = Depends(get_current_user)):
+    text = post.text.strip()
+
+
+
+    if not text:
+        raise HTTPException(status_code=400, detail="Please write something to upload")
+
+    if len(text) > 500:
+        raise HTTPException(status_code=400, detail="Please write 500 or less characters")
+
+
+    new_post = {
+        "username": user["username"],
+        "text": text,
+        "created_at": datetime.utcnow()
+    }
+
+    posts_collection.insert_one(new_post)
+    return {"message" : "Post Created"}
+
+
+
+@app.get("/posts")
+def get_posts():
+
+    posts = list(posts_collection.find({}, {"_id": 0}).sort("created_at", -1).limit(50))
+    
+    return posts

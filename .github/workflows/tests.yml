@@ -27,6 +27,14 @@ jobs:
           --health-timeout=5s
           --health-retries=10
 
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        
+
+
+
           
 
     steps:
@@ -48,4 +56,6 @@ jobs:
         env:
           DATABASE_URL: postgresql+psycopg2://postgres:testpassword@127.0.0.1:5432/meetpointdb_test
           SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+          MONGO_DB_URL: mongodb://127.0.0.1:27017
+          MONGO_DB_NAME: meetpoint_test
         run: pytest
