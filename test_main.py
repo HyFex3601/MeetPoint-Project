@@ -10,6 +10,8 @@ from sqlalchemy import Column, Integer, String
 from app.auth import hash_password
 import pytest 
 from starlette.websockets import WebSocketDisconnect
+import secrets
+import time
 
 client = TestClient(app)
 
@@ -269,7 +271,7 @@ def test_websocket_bad_token():
     room = str(uuid.uuid4())[:8]
 
     with pytest.raises(WebSocketDisconnect):
-        with client.websocket_connect(f"/ws/{room}?token-not-a-real-token"):
+        with client.websocket_connect(f"/ws/{room}?token=not-a-real-token"):
             pass
 
 
@@ -324,3 +326,112 @@ def test_blank_message():
         ws.send_text(f"{name}: real message")
 
         assert ws.receive_text() == f"{name}: real message"
+
+
+
+def test_create_post():
+    name, token = make_user_token()
+    headers = {"Authorization": f"Bearer {token}"}
+
+    text = f"post {uuid.uuid4()}"
+
+    post = client.post("/posts", json={"text": text}, headers=headers)
+
+    assert post.status_code == 200
+
+
+def test_get_posts():
+    name, token = make_user_token()
+    headers = {"Authorization": f"Bearer {token}"}
+
+    my_text = f"post {uuid.uuid4()}"
+
+    create_post = client.post("/posts", json={"text": my_text}, headers=headers)
+    assert create_post.status_code == 200
+
+    posts = client.get("/posts").json()
+
+    assert any(p["text"] == my_text and p["username"] == name for p in posts)
+
+
+
+def test_no_token():
+
+    create_post = client.post("/posts", json={"text": "hi"}, headers={"Authorization": "Bearer not-a-real-token"})
+
+    assert create_post.status_code == 401
+
+
+def test_empty_post_rejected():
+
+    name, token = make_user_token()
+    headers = {"Authorization": f"Bearer {token}"}
+
+    create_post = client.post("/posts", json={"text": ""}, headers=headers)
+
+    create_post2 = client.post("/posts", json={"text": "   "}, headers=headers)
+
+    assert create_post2.status_code == 400
+    assert create_post.status_code == 400
+
+
+def test_character_limit():
+
+    name, token = make_user_token()
+    headers = {"Authorization": f"Bearer {token}"}
+
+    text = secrets.token_hex(250)
+    
+    create_post = client.post("/posts", json={"text": text + "f"}, headers=headers)
+
+    create_post2 = client.post("/posts", json={"text": text}, headers=headers)
+    
+
+    assert create_post.status_code == 400
+    assert create_post2.status_code == 200
+
+
+
+def test_fake_username():
+
+    name, token = make_user_token()
+
+    text = f"post {uuid.uuid4()}"
+
+    headers = {"Authorization": f"Bearer {token}"}
+
+    create_post = client.post("/posts", json={"text": text, "username": "someone_else"}, headers=headers)
+
+    assert create_post.status_code == 200
+
+    posts = client.get("/posts").json()
+
+    assert any(p["username"] == name and p["text"] == text for p in posts)
+
+    assert not any(p["username"] == "someone_else" and p["text"] == text for p in posts)
+
+
+
+def test_posts_order():
+    name, token = make_user_token()
+
+    text = f"post {uuid.uuid4()}"
+    text2 = str(uuid.uuid4())
+
+    headers = {"Authorization": f"Bearer {token}"}
+
+    create_post = client.post("/posts", json={"text": text}, headers=headers)
+    time.sleep(0.01)
+    create_post2 = client.post("/posts", json={"text": text2}, headers=headers)
+
+    assert create_post.status_code == 200
+    assert create_post2.status_code == 200
+
+    posts = client.get("/posts").json()
+
+    texts = [p["text"] for p in posts]
+
+
+    assert texts.index(text2) < texts.index(text)
+
+    
