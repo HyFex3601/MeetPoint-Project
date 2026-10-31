@@ -10,6 +10,9 @@ import Chat from "./Chat";
 import { useState } from "react";
 import login from "./assets/login.svg"
 import logout from "./assets/logout.png"
+import Posts from "./Posts";
+import CreatePost from "./CreatePost"
+import Logo from "./assets/Logo.png"
 
 function App() {
 
@@ -25,7 +28,7 @@ function App() {
   return (
     <>
 
-    <h2 id="logo">MeetPoint</h2>
+    <img id="logo" src={Logo}/>
 
 
     <BrowserRouter>
@@ -38,6 +41,7 @@ function App() {
         <Link to="/events">Events + Chat</Link>
         <Link to="/create-event">CreateEvent</Link>
         <Link to="/my-booking">MyBooking</Link>
+        <Link to="/posts">Posts</Link>
         {token && <button onClick={handleLogout} aria-label="Log out"><img id="logoutBTN" src={logout} alt=""/></button>}
         
       </nav>
@@ -48,6 +52,8 @@ function App() {
           <Route path="/register" element={<Register />} /> 
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/my-booking" element={<MyBooking />} />
+          <Route path="/posts" element={<Posts/>}/>
+          <Route path="/create-post" element={<CreatePost />}/>
         </Routes>
       </main>
     </BrowserRouter>
